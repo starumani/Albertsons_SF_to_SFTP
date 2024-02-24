@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<global-property doc:name="Global Property" doc:id="7e572d52-c86d-44ae-bf57-160c1f8a5c2e" name="environment" value="local" />
+	<configuration-properties doc:name="Configuration properties" doc:id="00e33657-2964-469c-b99d-76c53abf812c" file="${environment}.yaml" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="a40c36b7-e7c9-412c-aa45-9164c61ada0c" >
+		<salesforce:basic-connection username="${sf_connector.username}" password="${sf_connector.password}" securityToken="${sf_connector.security_token}" url="${sf_connector.auth_url}"/>
+	</salesforce:sfdc-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f97c9e8e-4c87-4b65-90c9-5728d51486ff" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="40f676a5-a275-4a99-9530-054d3a40fb3f" >
+		<sftp:connection host="cloud-services.demos.mulesoft.com" port="30162" username="sahitya8e7" password="MuleSoftMuleSoft_1s" connectionTimeout="1000" responseTimeout="1000" workingDir="/upload"/>
+	</sftp:config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="682496fb-54af-421e-9813-cc58306a2a0e" >
+		<file:connection workingDir="/Users/starumani/Desktop/SF_to_SFTP" />
+	</file:config>
+</mule>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<flow name="sftosftpFlow" doc:id="b40bfbf6-3f0d-4f92-9d63-ce052fd0ea28" >
+		<http:listener doc:name="Listener" doc:id="2df44500-6dff-42dd-862d-2367dd7452ef" config-ref="HTTP_Listener_config" path="/loadData"/>
+		<salesforce:query doc:name="Query" doc:id="301f2100-70bf-45f1-8d30-74cc38a365e0" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id, Name from Account]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="b58221fc-c4a3-410c-a49e-b50c409b2ca8">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+payload&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform> [STUDIO] -->
+		<ee:transform doc:name="Transform Message" doc:id="47c22574-2153-4778-8721-ae463a52eaa0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="ccb54387-ad3d-4e4e-89eb-c1972ba1c05b" variableName="fileData"/>
+		<!-- [STUDIO:"Write"]<file:write doc:name="Write" doc:id="800d54e3-5349-4757-ad04-1943bb22d59b" config-ref="File_Config" path="Test/test.csv"/> [STUDIO] -->
+		<sftp:write doc:name="Write" doc:id="08737615-733a-4923-b053-72d5943d161e" config-ref="SFTP_Config" path="test.csv"/>
+		<ee:transform doc:name="Transform Message" doc:id="04b234f9-1858-4b8a-b904-8d28e623143d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.fileData]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

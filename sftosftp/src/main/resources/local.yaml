@@ -1,0 +1,5 @@
+sf_connector:
+    username: "starumani@starumani-230519-898.demo"
+    password: "MuleSoft2023"
+    security_token: "hugCbxBfYzdYubKuxA2zIVUnZ"
+    auth_url: "https://login.Salesforce.com/services/Soap/u/57.0/"
